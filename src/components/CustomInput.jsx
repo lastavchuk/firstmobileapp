@@ -1,7 +1,7 @@
 import { StyleSheet, TextInput } from 'react-native';
 
 export default function CustomInput(props) {
-    const { isFocus, setChangeText, onRef, setOnFocus } = props;
+    const { isFocus, onRef, setOnFocus } = props;
 
     return (
         <TextInput
@@ -11,7 +11,6 @@ export default function CustomInput(props) {
             placeholderTextColor="#bdbdbd"
             cursorColor="#aaa"
             ref={onRef}
-            onChangeText={setChangeText}
             onFocus={setOnFocus}
             onBlur={setOnFocus}
             {...props}
