@@ -50,7 +50,7 @@ export default function LoginScreen() {
                             autoCapitalize="none"
                             blurOnSubmit={false}
                             isFocus={isFocusEmail}
-                            onSubmitEditing={() => passwordRef.focus()}
+                            onSubmitEditing={() => passwordInput.focus()}
                             onChangeText={setEmail}
                             onFocus={() => setFocusEmail(true)}
                             onBlur={() => setFocusEmail(false)}
@@ -62,7 +62,7 @@ export default function LoginScreen() {
                                 secureTextEntry={isPasswordHide}
                                 autoComplete="password"
                                 returnKeyType="done"
-                                onRef={input => (passwordRef = input)}
+                                onRef={input => (passwordInput = input)}
                                 isFocus={isFocusPassword}
                                 onSubmitEditing={onLogin}
                                 onChangeText={setPassword}
@@ -79,7 +79,7 @@ export default function LoginScreen() {
                             </Pressable>
                         </View>
                         <CustomButton onPress={onLogin}>
-                            <Text style={styles.textBtn}>Зареєстуватися</Text>
+                            <Text style={styles.textBtn}>Увійти</Text>
                         </CustomButton>
                         <Text style={styles.textLink}>
                             Немає акаунту? Зареєструватися
