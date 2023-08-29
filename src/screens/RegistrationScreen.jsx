@@ -64,6 +64,7 @@ export default function RegistrationScreen() {
                             value={email}
                             placeholder="Адреса електронної пошти"
                             keyboardType="email-address"
+                            autoCapitalize="none"
                             caretHidden={false}
                             autoComplete="email"
                             returnKeyType="next"

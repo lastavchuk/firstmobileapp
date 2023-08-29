@@ -47,6 +47,7 @@ export default function LoginScreen() {
                             caretHidden={false}
                             autoComplete="email"
                             returnKeyType="next"
+                            autoCapitalize="none"
                             blurOnSubmit={false}
                             isFocus={isFocusEmail}
                             onSubmitEditing={() => passwordRef.focus()}
