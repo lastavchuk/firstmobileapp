@@ -105,20 +105,6 @@ const styles = StyleSheet.create({
         borderTopRightRadius: 25,
         borderTopLeftRadius: 25,
     },
-    photo: {
-        position: 'absolute',
-        top: -60,
-        left: Dimensions.get('window').width / 2 - 60,
-        width: 120,
-        height: 120,
-        borderRadius: 16,
-        backgroundColor: '#f6f6f6',
-    },
-    svgBtn: {
-        position: 'absolute',
-        bottom: 14,
-        right: -12,
-    },
     header: {
         marginBottom: 33,
         color: '#212121',
@@ -129,20 +115,6 @@ const styles = StyleSheet.create({
     },
     wrapperPass: {
         marginBottom: 27, //43-16 gap
-    },
-    textInput: {
-        height: 50,
-        padding: 16,
-
-        fontFamily: 'Roboto-400',
-        fontSize: 16,
-        color: '#212121',
-        // backgroundColor: '#f6f6f6',
-
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderRadius: 8,
-        // borderColor: '#e8e8e8',
     },
     textBtn: {
         color: '#ffffff',

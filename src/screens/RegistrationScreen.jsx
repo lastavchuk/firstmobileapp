@@ -152,20 +152,6 @@ const styles = StyleSheet.create({
     wrapperPass: {
         marginBottom: 27, //43-16 gap
     },
-    textInput: {
-        height: 50,
-        padding: 16,
-
-        fontFamily: 'Roboto-400',
-        fontSize: 16,
-        color: '#212121',
-        // backgroundColor: '#f6f6f6',
-
-        borderWidth: 1,
-        borderStyle: 'solid',
-        borderRadius: 8,
-        // borderColor: '#e8e8e8',
-    },
     textBtn: {
         color: '#ffffff',
         textAlign: 'center',
