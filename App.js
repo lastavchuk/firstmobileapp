@@ -1,9 +1,13 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import 'react-native-gesture-handler';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
 import { useFonts } from 'expo-font';
-// import PostsScreen from './src/screens/PostsScreen';
+
 import RegistrationScreen from './src/screens/RegistrationScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import HomeScreen from './src/screens/HomeScreen';
+
+const MainStack = createStackNavigator();
 
 export default function App() {
     // const fontStyles = ['normal', 'italic'];
@@ -18,20 +22,25 @@ export default function App() {
     }
 
     return (
-        <View style={styles.container}>
-            <LoginScreen />
-            {/* <RegistrationScreen /> */}
-            {/* <PostsScreen /> */}
+        <NavigationContainer>
+            <MainStack.Navigator initialRouteName="LoginScreen">
+                <MainStack.Screen
+                    name="LoginScreen"
+                    component={LoginScreen}
+                    options={{ headerShown: false }}
+                />
+                <MainStack.Screen
+                    name="RegistrationScreen"
+                    component={RegistrationScreen}
+                    options={{ headerShown: false }}
+                />
 
-            <StatusBar style="auto" />
-        </View>
+                <MainStack.Screen
+                    name="HomeScreen"
+                    component={HomeScreen}
+                    options={{ headerShown: false }}
+                />
+            </MainStack.Navigator>
+        </NavigationContainer>
     );
 }
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        fontFamily: 'Roboto-400',
-        justifyContent: 'center',
-    },
-});

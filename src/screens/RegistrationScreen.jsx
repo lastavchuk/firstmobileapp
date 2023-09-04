@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
     StyleSheet,
     ImageBackground,
@@ -12,7 +13,7 @@ import {
 } from 'react-native';
 import SvgAdd from '../assets/images/add.svg';
 import CustomInput from '../components/CustomInput';
-import CustomButton from '../components/CustomButton/';
+import CustomBtn from '../components/CustomBtn/';
 
 export default function RegistrationScreen() {
     const [login, setLogin] = useState('');
@@ -23,11 +24,14 @@ export default function RegistrationScreen() {
     const [isFocusPassword, setFocusPassword] = useState(false);
     const [isPasswordHide, setPasswordHide] = useState(true);
 
+    const navigation = useNavigation();
+
     function onRegister() {
         if (!!login && !!email && !!password) {
             console.log(
                 `login: ${login}, email: ${email}, password: ${password}`
             );
+            navigation.navigate('HomeScreen');
         }
     }
 
@@ -100,12 +104,31 @@ export default function RegistrationScreen() {
                                 </Text>
                             </Pressable>
                         </View>
-                        <CustomButton onPress={onRegister}>
+                        <CustomBtn onPress={onRegister}>
                             <Text style={styles.textBtn}>Зареєстуватися</Text>
-                        </CustomButton>
-                        <Text style={styles.textLink}>
-                            Вже є акаунт? Увійти
-                        </Text>
+                        </CustomBtn>
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Text style={styles.textLink}>Вже є акаунт? </Text>
+                            <Pressable
+                                onPress={() =>
+                                    navigation.navigate('LoginScreen')
+                                }
+                            >
+                                <Text
+                                    style={[
+                                        styles.textLink,
+                                        { textDecorationLine: 'underline' },
+                                    ]}
+                                >
+                                    Увійти
+                                </Text>
+                            </Pressable>
+                        </View>
                     </View>
                 </KeyboardAvoidingView>
             </ImageBackground>

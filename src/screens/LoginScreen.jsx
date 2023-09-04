@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
     StyleSheet,
     ImageBackground,
@@ -8,10 +9,9 @@ import {
     Keyboard,
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
-    Dimensions,
 } from 'react-native';
 import CustomInput from '../components/CustomInput';
-import CustomButton from '../components/CustomButton/';
+import CustomBtn from '../components/CustomBtn/';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
@@ -20,9 +20,12 @@ export default function LoginScreen() {
     const [isFocusPassword, setFocusPassword] = useState(false);
     const [isPasswordHide, setPasswordHide] = useState(true);
 
+    const navigation = useNavigation();
+
     function onLogin() {
         if (!!email && !!password) {
             console.log(`email: ${email}, password: ${password}`);
+            navigation.navigate('HomeScreen');
         }
     }
 
@@ -78,12 +81,32 @@ export default function LoginScreen() {
                                 </Text>
                             </Pressable>
                         </View>
-                        <CustomButton onPress={onLogin}>
+                        <CustomBtn onPress={onLogin}>
                             <Text style={styles.textBtn}>Увійти</Text>
-                        </CustomButton>
-                        <Text style={styles.textLink}>
-                            Немає акаунту? Зареєструватися
-                        </Text>
+                        </CustomBtn>
+
+                        <View
+                            style={{
+                                flexDirection: 'row',
+                                justifyContent: 'center',
+                            }}
+                        >
+                            <Text style={styles.textLink}>Немає акаунту? </Text>
+                            <Pressable
+                                onPress={() =>
+                                    navigation.navigate('RegistrationScreen')
+                                }
+                            >
+                                <Text
+                                    style={[
+                                        styles.textLink,
+                                        { textDecorationLine: 'underline' },
+                                    ]}
+                                >
+                                    Зареєструватися
+                                </Text>
+                            </Pressable>
+                        </View>
                     </View>
                 </KeyboardAvoidingView>
             </ImageBackground>
