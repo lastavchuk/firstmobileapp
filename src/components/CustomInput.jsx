@@ -9,7 +9,7 @@ export default function CustomInput(props) {
             borderColor={isFocus ? '#ff6c00' : '#e8e8e8'}
             backgroundColor={isFocus ? '#ffffff' : '#f6f6f6'}
             placeholderTextColor="#bdbdbd"
-            cursorColor="#aaa"
+            cursorColor="#ff6c00"
             ref={onRef}
             onFocus={setOnFocus}
             onBlur={setOnFocus}
