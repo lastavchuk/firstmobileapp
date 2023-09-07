@@ -1,4 +1,5 @@
-import { StyleSheet, View, Text, Image } from 'react-native';
+import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import SvgComment from '../assets/images/comment.svg';
 import SvgLike from '../assets/images/like.svg';
 import SvgMap from '../assets/images/map.svg';
@@ -15,8 +16,16 @@ function getFill(count) {
 }
 
 export default function PostItem({ data }) {
-    const { img, title, address, comment, like } = data;
+    const {
+        img,
+        title,
+        position: { location, coords },
+        comment,
+        like,
+    } = data;
     const tmp = '../assets/images/tmp-post.jpg'; //!!!!!!!!!!!!!!!!!
+
+    const navigation = useNavigation();
 
     return (
         <View style={styles.postItem}>
@@ -32,18 +41,15 @@ export default function PostItem({ data }) {
 
             <View style={styles.postWrapper}>
                 <View style={styles.box}>
-                    <SvgComment
-                        fill={getFill(comment)}
-                        style={{ color: getColor(comment) }}
-                    />
-                    <Text
-                        style={[
-                            styles.postText,
-                            { color: getColorSoc(comment) },
-                        ]}
+                    <Pressable
+                        style={styles.box}
+                        onPress={() => navigation.navigate('CommentsScreen')}
                     >
-                        {comment}
-                    </Text>
+                        <SvgComment fill={getFill(comment)} style={{ color: getColor(comment) }} />
+                        <Text style={[styles.postText, { color: getColorSoc(comment) }]}>
+                            {comment}
+                        </Text>
+                    </Pressable>
 
                     <SvgLike
                         fill="#ffffff"
@@ -52,23 +58,18 @@ export default function PostItem({ data }) {
                             marginLeft: 16,
                         }}
                     />
-                    <Text
-                        style={[styles.postText, { color: getColorSoc(like) }]}
-                    >
-                        {like}
-                    </Text>
+                    <Text style={[styles.postText, { color: getColorSoc(like) }]}>{like}</Text>
                 </View>
 
-                <View style={[styles.box, { marginLeft: 16 }]}>
+                <Pressable
+                    style={[styles.box, { marginLeft: 16 }]}
+                    onPress={() => navigation.navigate('MapScreen', { location, coords })}
+                >
                     <SvgMap fill="#ffffff" style={{ color: '#bdbdbd' }} />
-                    <Text
-                        style={styles.postTextAddress}
-                        ellipsizeMode="middle"
-                        numberOfLines={1}
-                    >
-                        {address}
+                    <Text style={styles.postTextAddress} ellipsizeMode="middle" numberOfLines={1}>
+                        {location}
                     </Text>
-                </View>
+                </Pressable>
             </View>
         </View>
     );
