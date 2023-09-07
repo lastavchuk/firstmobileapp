@@ -65,15 +65,13 @@ export default function CreatePostsScreen() {
         })
             .then(position => {
                 // console.log('position :>> ', position);
-
-                const coords = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                };
                 setCoords([position.coords.latitude, position.coords.longitude]);
 
                 (async () => {
-                    const address = await Location.reverseGeocodeAsync(coords);
+                    const address = await Location.reverseGeocodeAsync({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    });
                     if (!!address.length) {
                         // console.log('address :>> ', address);
                         setLocation(`${address[0].city}, ${address[0].country}`);
