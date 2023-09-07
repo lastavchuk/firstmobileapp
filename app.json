@@ -27,13 +27,23 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.company.app",
+      "config": {
+        "googleMapsApiKey": "AIzaSyBVX7tSMJO_-BnNRm4oR_Em2zpIy7mkQTY"
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "config":{
+        "googleMaps":{
+          "apiKey": "AIzaSyBVX7tSMJO_-BnNRm4oR_Em2zpIy7mkQTY"
+        }
+       },
+       "softwareKeyboardLayoutMode": "pan"
     },
     "web": {
       "favicon": "./assets/favicon.png"
