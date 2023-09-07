@@ -5,7 +5,8 @@
         title: "Ліс",
         comment: 0,
         like: 0,
-        address: "Ivano-Frankivsk Region, Ukraine",
+        position: {location: "Ivano-Frankivsk, Ukraine", coords: [48.9117437,24.6347286]}
+        
     },
     {
         id: 2,
@@ -13,7 +14,7 @@
         title: "Ліс",
         comment: 0,
         like: 5,
-        address: "Ivano-Frankivsk Region, Ukraine",
+        position: {location: "Khmelnytsky, Ukraine", coords: [49.4105227,26.9128581]}
     },
     {
         id: 3,
@@ -21,7 +22,7 @@
         title: "Ліс",
         comment: 3,
         like: 7,
-        address: "Ivano-Frankivsk Region, Ukraine",
+        position: {location: "Chernivtsy, Ukraine", coords: [48.3213186,25.851518]}
     },
     {
         id: 4,
@@ -29,6 +30,6 @@
         title: "Ліс",
         comment: 2,
         like: 3,
-        address: "Ivano-Frankivsk Region, Ukraine",
+        position: {location: "Lviv, Ukraine", coords: [49.8326598,23.9298352]}
     },
 ];
