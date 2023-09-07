@@ -3,9 +3,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { useFonts } from 'expo-font';
 
-import RegistrationScreen from './src/screens/RegistrationScreen';
-import LoginScreen from './src/screens/LoginScreen';
+import MapScreen from './src/screens/MapScreen';
 import HomeScreen from './src/screens/HomeScreen';
+import LoginScreen from './src/screens/LoginScreen';
+import CommentsScreen from './src/screens/CommentsScreen';
+import RegistrationScreen from './src/screens/RegistrationScreen';
+import CustomBtnBack from './src/components/CustomBtnBack';
 
 const MainStack = createStackNavigator();
 
@@ -39,6 +42,48 @@ export default function App() {
                     name="HomeScreen"
                     component={HomeScreen}
                     options={{ headerShown: false }}
+                />
+                <MainStack.Screen
+                    name="MapScreen"
+                    component={MapScreen}
+                    options={{
+                        title: 'Місцезнаходження',
+                        headerLeft: () => <CustomBtnBack />,
+                        headerTitleAlign: 'center',
+                        headerTitleStyle: {
+                            fontFamily: 'Roboto-500',
+                            fontSize: 17,
+                            letterSpacing: -0.408,
+                            color: '#212121',
+                        },
+                        headerStyle: {
+                            boxShadow: '0px 0.5px 0px 0px rgba(0, 0, 0, 0.30)',
+                            backgroundColor: '#ffffff',
+                            borderBottomWidth: 0.5,
+                            borderBottomColor: '#b3b3b3',
+                        },
+                    }}
+                />
+                <MainStack.Screen
+                    name="CommentsScreen"
+                    component={CommentsScreen}
+                    options={{
+                        title: 'Коментарі',
+                        headerLeft: () => <CustomBtnBack />,
+                        headerTitleAlign: 'center',
+                        headerTitleStyle: {
+                            fontFamily: 'Roboto-500',
+                            fontSize: 17,
+                            letterSpacing: -0.408,
+                            color: '#212121',
+                        },
+                        headerStyle: {
+                            boxShadow: '0px 0.5px 0px 0px rgba(0, 0, 0, 0.30)',
+                            backgroundColor: '#ffffff',
+                            borderBottomWidth: 0.5,
+                            borderBottomColor: '#b3b3b3',
+                        },
+                    }}
                 />
             </MainStack.Navigator>
         </NavigationContainer>
