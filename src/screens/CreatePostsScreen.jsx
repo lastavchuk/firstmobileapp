@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 import {
     StyleSheet,
     View,
@@ -9,47 +10,160 @@ import {
     Pressable,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
+    Dimensions,
+    Image,
 } from 'react-native';
+
+import ToastManager, { Toast } from 'toastify-react-native';
 
 import SvgCamera from '../assets/images/camera.svg';
 import SvgMap from '../assets/images/map.svg';
 import SvgDelPost from '../assets/images/del-post.svg';
+import SvgCameraFlip from '../assets/images/camera-flip.svg';
 import CustomBtn from '../components/CustomBtn';
 
+import { Camera } from 'expo-camera';
+import * as MediaLibrary from 'expo-media-library';
+import * as Location from 'expo-location';
+
 export default function CreatePostsScreen() {
-    const [photo, setPhoto] = useState('');
-    const [title, setTitle] = useState('');
-    const [location, setLocation] = useState('');
+    const [photo, setPhoto] = useState(null);
+    const [title, setTitle] = useState(null);
+    const [location, setLocation] = useState(null);
+    const [coords, setCoords] = useState(null);
 
-    const isActive = !!photo && !!title && !!location;
+    const [hasPermissionCamera, setHasPermissionCamera] = useState(null);
+    const [cameraRef, setCameraRef] = useState(null);
+    const [type, setType] = useState(Camera.Constants.Type.back);
 
-    function onPublish() {
-        if (isActive) {
+    const navigation = useNavigation();
+
+    const isActive = !!photo && !!title;
+
+    useEffect(() => {
+        (async () => {
+            const { status } = await Camera.requestCameraPermissionsAsync();
+            await MediaLibrary.requestPermissionsAsync();
+            setHasPermissionCamera(status === 'granted');
+        })();
+
+        (async () => {
+            let { status } = await Location.requestForegroundPermissionsAsync();
+            if (status === 'granted') {
+                await getLocation();
+            } else Toast.error('Немає доступу до місцезнаходження');
+        })();
+    }, []);
+
+    if (hasPermissionCamera === false) {
+        return <Text style={styles.container}>Немає доступу до камери</Text>;
+    }
+
+    async function getLocation() {
+        await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Low,
+        })
+            .then(position => {
+                // console.log('position :>> ', position);
+
+                const coords = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                };
+                setCoords([position.coords.latitude, position.coords.longitude]);
+
+                (async () => {
+                    const address = await Location.reverseGeocodeAsync(coords);
+                    if (!!address.length) {
+                        // console.log('address :>> ', address);
+                        setLocation(`${address[0].city}, ${address[0].country}`);
+                    }
+                })();
+            })
+            .catch(error =>
+                Toast.error(
+                    'Запит про місцезнаходження не виконано через невідповідні налаштування пристрою'
+                )
+            );
+    }
+
+    async function onPublish() {
+        if (!location) {
+            await getLocation();
+        }
+
+        if (isActive && location) {
             console.log(`${photo}, ${title}, ${location}`);
+
+            onDelete();
+            navigation.navigate('PostsScreen');
+        } else {
+            Toast.info('Заповніть всі поля');
         }
     }
 
     function onDelete() {
-        setPhoto('');
-        setTitle('');
-        setLocation('');
+        setPhoto(null);
+        setTitle(null);
+        setLocation(null);
     }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
+                <ToastManager
+                    width={Dimensions.get('window').width - 32}
+                    height={100}
+                    position="top"
+                />
                 <ScrollView>
                     <View style={styles.wrapperCamera}>
-                        <View style={styles.camera}>
-                            <Pressable
-                                style={styles.cameraContainer}
-                                onPress={() => setPhoto('Take a picture')}
-                            >
-                                <SvgCamera style={styles.cameraIcon} />
-                            </Pressable>
-                        </View>
+                        {!!photo ? (
+                            <View>
+                                <Image style={styles.camera} source={{ uri: photo }} />
 
-                        <Text style={styles.text}>Завантажте фото</Text>
+                                <Pressable
+                                    style={styles.cameraContainer}
+                                    onPress={() => setPhoto(null)}
+                                >
+                                    <SvgDelPost />
+                                </Pressable>
+                            </View>
+                        ) : (
+                            <Camera style={styles.camera} type={type} ref={setCameraRef}>
+                                <Pressable
+                                    style={styles.flipContainer}
+                                    onPress={() => {
+                                        setType(
+                                            type === Camera.Constants.Type.back
+                                                ? Camera.Constants.Type.front
+                                                : Camera.Constants.Type.back
+                                        );
+                                    }}
+                                >
+                                    <View style={styles.cameraFlipIcon}>
+                                        <SvgCameraFlip />
+                                    </View>
+                                </Pressable>
+
+                                <Pressable
+                                    style={styles.cameraContainer}
+                                    onPress={async () => {
+                                        if (cameraRef) {
+                                            const { uri } = await cameraRef.takePictureAsync();
+                                            await MediaLibrary.createAssetAsync(uri);
+                                            setPhoto(uri);
+                                        }
+                                    }}
+                                >
+                                    <SvgCamera />
+                                </Pressable>
+                            </Camera>
+                        )}
+
+                        <Text style={styles.text}>
+                            {!photo ? 'Завантажте фото' : 'Редагувати фото'}
+                        </Text>
                     </View>
 
                     <KeyboardAvoidingView
@@ -70,34 +184,30 @@ export default function CreatePostsScreen() {
                             />
                             <View>
                                 <TextInput
-                                    style={[
-                                        styles.textInput,
-                                        { paddingLeft: 28 },
-                                    ]}
+                                    style={[styles.textInput, { paddingLeft: 28 }]}
                                     value={location}
                                     placeholder="Місцевість..."
                                     returnKeyType="done"
                                     cursorColor="#ff6c00"
                                     placeholderTextColor="#bdbdbd"
                                     onChangeText={setLocation}
+                                    onFocus={() => (!location ? getLocation() : null)}
                                     ref={input => (locationInput = input)}
-                                    // onSubmitEditing={onPublish}
                                 />
-                                <SvgMap style={styles.icon} />
+                                <Pressable
+                                    style={styles.icon}
+                                    onPress={() =>
+                                        navigation.navigate('MapScreen', { location, coords })
+                                    }
+                                >
+                                    <SvgMap />
+                                </Pressable>
                             </View>
                         </View>
                     </KeyboardAvoidingView>
 
-                    <CustomBtn
-                        type={isActive ? 'Primary' : 'Secondary'}
-                        onPress={onPublish}
-                    >
-                        <Text
-                            style={[
-                                styles.textBtn,
-                                { color: isActive ? '#ffffff' : '#bdbdbd' },
-                            ]}
-                        >
+                    <CustomBtn type={isActive ? 'Primary' : 'Secondary'} onPress={onPublish}>
+                        <Text style={[styles.textBtn, { color: isActive ? '#ffffff' : '#bdbdbd' }]}>
                             Опубліковати
                         </Text>
                     </CustomBtn>
@@ -142,6 +252,16 @@ const styles = StyleSheet.create({
         transform: [{ translateX: -30 }, { translateY: -30 }],
 
         backgroundColor: '#ffffff',
+    },
+    cameraFlipIcon: {
+        padding: 2,
+        backgroundColor: '#ffffff',
+        borderRadius: 14,
+    },
+    flipContainer: {
+        position: 'absolute',
+        bottom: 5,
+        right: 5,
     },
     textInput: {
         paddingVertical: 16,

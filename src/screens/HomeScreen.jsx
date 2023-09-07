@@ -11,7 +11,7 @@ import SvgPosts from '../assets/images/grid.svg';
 import SvgAddPost from '../assets/images/app-post.svg';
 import SvgUser from '../assets/images/user.svg';
 import SvgLogOut from '../assets/images/logout.svg';
-import SvgBack from '../assets/images/left.svg';
+import CustomBtnBack from '../components/CustomBtnBack';
 
 const Tabs = createBottomTabNavigator();
 
@@ -64,13 +64,7 @@ export default function HomeScreen() {
                     tabBarIcon: ({ focused }) => {
                         return (
                             <CustomBtnTab focused={focused}>
-                                <SvgPosts
-                                    stroke={
-                                        focused
-                                            ? '#ffffff'
-                                            : 'rgba(33, 33, 33, 0.8)'
-                                    }
-                                />
+                                <SvgPosts stroke={focused ? '#ffffff' : 'rgba(33, 33, 33, 0.8)'} />
                             </CustomBtnTab>
                         );
                     },
@@ -82,24 +76,11 @@ export default function HomeScreen() {
                 options={{
                     title: 'Створити публікацію',
                     tabBarStyle: { display: 'none' },
-                    headerLeft: () => (
-                        <Pressable
-                            style={{ marginLeft: 16 }}
-                            onPress={() => navigation.navigate('PostsScreen')}
-                        >
-                            <SvgBack />
-                        </Pressable>
-                    ),
+                    headerLeft: () => <CustomBtnBack />,
                     tabBarIcon: ({ focused }) => {
                         return (
                             <CustomBtnTab focused={focused}>
-                                <SvgAddPost
-                                    fill={
-                                        focused
-                                            ? '#ffffff'
-                                            : 'rgba(33, 33, 33, 0.8)'
-                                    }
-                                />
+                                <SvgAddPost fill={focused ? '#ffffff' : 'rgba(33, 33, 33, 0.8)'} />
                             </CustomBtnTab>
                         );
                     },
@@ -114,13 +95,7 @@ export default function HomeScreen() {
                     tabBarIcon: ({ focused }) => {
                         return (
                             <CustomBtnTab focused={focused}>
-                                <SvgUser
-                                    stroke={
-                                        focused
-                                            ? '#ffffff'
-                                            : 'rgba(33, 33, 33, 0.8)'
-                                    }
-                                />
+                                <SvgUser stroke={focused ? '#ffffff' : 'rgba(33, 33, 33, 0.8)'} />
                             </CustomBtnTab>
                         );
                     },

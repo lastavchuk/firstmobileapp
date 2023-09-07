@@ -28,9 +28,7 @@ export default function RegistrationScreen() {
 
     function onRegister() {
         if (!!login && !!email && !!password) {
-            console.log(
-                `login: ${login}, email: ${email}, password: ${password}`
-            );
+            console.log(`login: ${login}, email: ${email}, password: ${password}`);
             navigation.navigate('HomeScreen');
         }
     }
@@ -43,7 +41,7 @@ export default function RegistrationScreen() {
                 style={styles.imgBg}
             >
                 <KeyboardAvoidingView
-                    behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+                    behavior={Platform.OS == 'ios' ? 'padding' : ''}
                     keyboardVerticalOffset={-140}
                 >
                     <View style={styles.container}>
@@ -114,16 +112,9 @@ export default function RegistrationScreen() {
                             }}
                         >
                             <Text style={styles.textLink}>Вже є акаунт? </Text>
-                            <Pressable
-                                onPress={() =>
-                                    navigation.navigate('LoginScreen')
-                                }
-                            >
+                            <Pressable onPress={() => navigation.navigate('LoginScreen')}>
                                 <Text
-                                    style={[
-                                        styles.textLink,
-                                        { textDecorationLine: 'underline' },
-                                    ]}
+                                    style={[styles.textLink, { textDecorationLine: 'underline' }]}
                                 >
                                     Увійти
                                 </Text>

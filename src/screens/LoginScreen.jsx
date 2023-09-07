@@ -37,7 +37,7 @@ export default function LoginScreen() {
                 style={styles.imgBg}
             >
                 <KeyboardAvoidingView
-                    behavior={Platform.OS == 'ios' ? 'padding' : 'height'}
+                    behavior={Platform.OS == 'ios' ? 'padding' : ''}
                     keyboardVerticalOffset={-130}
                 >
                     <View style={styles.container}>
@@ -92,16 +92,9 @@ export default function LoginScreen() {
                             }}
                         >
                             <Text style={styles.textLink}>Немає акаунту? </Text>
-                            <Pressable
-                                onPress={() =>
-                                    navigation.navigate('RegistrationScreen')
-                                }
-                            >
+                            <Pressable onPress={() => navigation.navigate('RegistrationScreen')}>
                                 <Text
-                                    style={[
-                                        styles.textLink,
-                                        { textDecorationLine: 'underline' },
-                                    ]}
+                                    style={[styles.textLink, { textDecorationLine: 'underline' }]}
                                 >
                                     Зареєструватися
                                 </Text>
