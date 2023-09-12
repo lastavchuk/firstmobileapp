@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { addPostThunk } from './postsThunks';
+import { addPostThunk, getAllPostsThunk } from './postsThunks';
 
 const postsSlice = createSlice({
     name: 'posts',
@@ -7,9 +7,13 @@ const postsSlice = createSlice({
         posts: [],
     },
     extraReducers: builder => {
-        builder.addCase(addPostThunk.fulfilled, (state, action) => {
-            state.posts.push(action.payload);
-        });
+        builder
+            .addCase(addPostThunk.fulfilled, (state, action) => {
+                state.posts.push(action.payload);
+            })
+            .addCase(getAllPostsThunk.fulfilled, (state, action) => {
+                state.posts = action.payload;
+            });
     },
 });
 
