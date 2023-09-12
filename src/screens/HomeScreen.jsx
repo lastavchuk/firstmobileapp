@@ -1,22 +1,39 @@
+import { useEffect } from 'react';
 import { Pressable, StyleSheet } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import CustomBtnTab from '../components/CustomBtnTab';
+
+import { selectUserData } from '../redux/selectors';
+import { logOutUserThunk } from '../redux/auth/userThunks';
+import { getAllPostsThunk } from '../redux/posts/postsThunks';
+
+import SvgPosts from '../assets/images/grid.svg';
+import SvgAddPost from '../assets/images/add-post.svg';
+import SvgUser from '../assets/images/user.svg';
+import SvgLogOut from '../assets/images/logout.svg';
+import CustomBtnBack from '../components/CustomBtnBack';
 
 import PostsScreen from './PostsScreen';
 import ProfileScreen from './ProfileScreen';
 import CreatePostsScreen from './CreatePostsScreen';
-
-import SvgPosts from '../assets/images/grid.svg';
-import SvgAddPost from '../assets/images/app-post.svg';
-import SvgUser from '../assets/images/user.svg';
-import SvgLogOut from '../assets/images/logout.svg';
-import CustomBtnBack from '../components/CustomBtnBack';
+import CustomBtnTab from '../components/CustomBtnTab';
 
 const Tabs = createBottomTabNavigator();
 
 export default function HomeScreen() {
     const navigation = useNavigation();
+    const userData = useSelector(selectUserData);
+
+    if (!userData) {
+        navigation.navigate('LoginScreen');
+    }
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        dispatch(getAllPostsThunk(userData.uId));
+    }, []);
 
     return (
         <Tabs.Navigator
@@ -56,7 +73,7 @@ export default function HomeScreen() {
                     headerRight: () => (
                         <Pressable
                             style={{ marginRight: 16 }}
-                            onPress={() => navigation.navigate('LoginScreen')}
+                            onPress={() => dispatch(logOutUserThunk())}
                         >
                             <SvgLogOut />
                         </Pressable>
