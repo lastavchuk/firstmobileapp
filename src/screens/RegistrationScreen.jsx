@@ -1,35 +1,43 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import {
     StyleSheet,
     ImageBackground,
     Text,
     View,
+    Image,
     Pressable,
     Keyboard,
     TouchableWithoutFeedback,
     KeyboardAvoidingView,
     Dimensions,
 } from 'react-native';
+import { registerUserThunk } from '../redux/auth/userThunks';
+
 import SvgAdd from '../assets/images/add.svg';
+import SvgDel from '../assets/images/del.svg';
 import CustomInput from '../components/CustomInput';
 import CustomBtn from '../components/CustomBtn/';
+import { pickPhoto } from '../services/api';
 
 export default function RegistrationScreen() {
     const [login, setLogin] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [photo, setPhoto] = useState('');
+
     const [isFocusLogin, setFocusLogin] = useState(false);
     const [isFocusEmail, setFocusEmail] = useState(false);
     const [isFocusPassword, setFocusPassword] = useState(false);
     const [isPasswordHide, setPasswordHide] = useState(true);
 
     const navigation = useNavigation();
+    const dispatch = useDispatch();
 
-    function onRegister() {
+    async function onRegister() {
         if (!!login && !!email && !!password) {
-            console.log(`login: ${login}, email: ${email}, password: ${password}`);
-            navigation.navigate('HomeScreen');
+            dispatch(registerUserThunk({ login, email, password, photo }));
         }
     }
 
@@ -46,8 +54,25 @@ export default function RegistrationScreen() {
                 >
                     <View style={styles.container}>
                         <View style={styles.photo}>
-                            <SvgAdd style={styles.svgBtn} />
+                            {!photo ? (
+                                <Pressable
+                                    style={styles.svgBtn}
+                                    onPress={async () => {
+                                        setPhoto(await pickPhoto());
+                                    }}
+                                >
+                                    <SvgAdd />
+                                </Pressable>
+                            ) : (
+                                <>
+                                    <Image source={{ uri: photo }} style={styles.photoImg} />
+                                    <Pressable style={styles.svgBtn} onPress={() => setPhoto(null)}>
+                                        <SvgDel />
+                                    </Pressable>
+                                </>
+                            )}
                         </View>
+
                         <Text style={styles.header}>Реєстрація</Text>
                         <CustomInput
                             autoFocus
@@ -150,6 +175,11 @@ const styles = StyleSheet.create({
         height: 120,
         borderRadius: 16,
         backgroundColor: '#f6f6f6',
+    },
+    photoImg: {
+        width: '100%',
+        height: '100%',
+        borderRadius: 16,
     },
     svgBtn: {
         position: 'absolute',
