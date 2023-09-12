@@ -1,4 +1,5 @@
-import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import {
     StyleSheet,
     View,
@@ -13,11 +14,14 @@ import {
 import SvgDel from '../assets/images/del.svg';
 import SvgLogOut from '../assets/images/logout.svg';
 
-import POSTS from '../../tmpData.json'; //!!!!!!!!!!!!!
 import PostItem from '../components/PostItem';
+import { logOutUserThunk } from '../redux/auth/userThunks';
+import { selectPosts, selectUserData } from '../redux/selectors';
 
 export default function ProfileScreen() {
-    const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const userData = useSelector(selectUserData);
+    const allPosts = useSelector(selectPosts);
 
     return (
         <ImageBackground
@@ -29,20 +33,17 @@ export default function ProfileScreen() {
                 <View style={styles.photo}>
                     <Image
                         style={{ width: 120, height: 120 }}
-                        source={require('../assets/images/tmp-user.png')}
+                        source={{ uri: userData.photoURL }}
                     />
                     <SvgDel style={styles.svgBtnDel} />
                 </View>
-                <Pressable
-                    style={styles.svgBtnLogOut}
-                    onPress={() => navigation.navigate('LoginScreen')}
-                >
+                <Pressable style={styles.svgBtnLogOut} onPress={() => dispatch(logOutUserThunk())}>
                     <SvgLogOut />
                 </Pressable>
 
-                <Text style={styles.header}>Natali Romanova</Text>
+                <Text style={styles.header}>{userData.displayName}</Text>
                 <FlatList
-                    data={POSTS}
+                    data={allPosts}
                     renderItem={({ item }) => <PostItem data={item} />}
                     keyExtractor={item => item.id}
                 />
@@ -56,6 +57,7 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     container: {
+        flex: 1,
         height: '100%',
         marginTop: 220,
         paddingTop: 92,

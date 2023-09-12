@@ -20,22 +20,16 @@ export default function PostItem({ data }) {
         img,
         title,
         position: { location, coords },
-        comment,
+        comments,
         like,
     } = data;
-    const tmp = '../assets/images/tmp-post.jpg'; //!!!!!!!!!!!!!!!!!
 
     const navigation = useNavigation();
 
     return (
         <View style={styles.postItem}>
             <View style={styles.userWrapper}>
-                <Image
-                    style={styles.postImg}
-                    resizeMode="cover"
-                    // source={require(img)}
-                    source={require(tmp)}
-                />
+                <Image style={styles.postImg} resizeMode="cover" source={{ uri: img }} />
                 <Text style={styles.postHeader}>{title}</Text>
             </View>
 
@@ -45,9 +39,12 @@ export default function PostItem({ data }) {
                         style={styles.box}
                         onPress={() => navigation.navigate('CommentsScreen')}
                     >
-                        <SvgComment fill={getFill(comment)} style={{ color: getColor(comment) }} />
-                        <Text style={[styles.postText, { color: getColorSoc(comment) }]}>
-                            {comment}
+                        <SvgComment
+                            fill={getFill(comments.length)}
+                            style={{ color: getColor(comments.length) }}
+                        />
+                        <Text style={[styles.postText, { color: getColorSoc(comments.length) }]}>
+                            {comments.length}
                         </Text>
                     </Pressable>
 
@@ -82,6 +79,7 @@ const styles = StyleSheet.create({
         width: '100%',
         height: 240,
         borderRadius: 8,
+        backgroundColor: '#e8e8e8',
     },
     postHeader: {
         marginVertical: 8,

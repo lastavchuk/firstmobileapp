@@ -1,31 +1,28 @@
-import {
-    StyleSheet,
-    FlatList,
-    SafeAreaView,
-    View,
-    Text,
-    Image,
-} from 'react-native';
+import { StyleSheet, FlatList, SafeAreaView, View, Text, Image } from 'react-native';
+import { useSelector } from 'react-redux';
 import PostItem from '../components/PostItem';
-import POSTS from '../../tmpData.json'; //!!!!!!!!!!!!!
+import { selectPosts, selectUserData } from '../redux/selectors';
 
 export default function PostsScreen() {
+    const userData = useSelector(selectUserData);
+    const allPosts = useSelector(selectPosts);
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.user}>
                 <Image
                     style={styles.userImg}
                     resizeMode="cover"
-                    source={require('../assets/images/tmp-user.png')}
+                    source={{ uri: userData.photoURL }}
                 />
                 <View style={{ justifyContent: 'center' }}>
-                    <Text style={styles.userName}>Natali Romanova</Text>
-                    <Text style={styles.userEmail}>email@example.com</Text>
+                    <Text style={styles.userName}>{userData.displayName}</Text>
+                    <Text style={styles.userEmail}>{userData.email}</Text>
                 </View>
             </View>
 
             <FlatList
-                data={POSTS}
+                data={allPosts}
                 renderItem={({ item }) => <PostItem data={item} />}
                 keyExtractor={item => item.id}
             />

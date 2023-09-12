@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import {
     StyleSheet,
@@ -10,24 +11,26 @@ import {
     Pressable,
     KeyboardAvoidingView,
     TouchableWithoutFeedback,
-    Dimensions,
     Image,
 } from 'react-native';
 
-import ToastManager, { Toast } from 'toastify-react-native';
+import { selectUserData } from '../redux/selectors';
+import { addPostThunk } from '../redux/posts/postsThunks';
+
+import { Toast } from 'toastify-react-native';
+import { Camera } from 'expo-camera';
+import * as Location from 'expo-location';
+import * as MediaLibrary from 'expo-media-library';
 
 import SvgCamera from '../assets/images/camera.svg';
 import SvgMap from '../assets/images/map.svg';
 import SvgDelPost from '../assets/images/del-post.svg';
 import SvgCameraFlip from '../assets/images/camera-flip.svg';
 import CustomBtn from '../components/CustomBtn';
-
-import { Camera } from 'expo-camera';
-import * as MediaLibrary from 'expo-media-library';
-import * as Location from 'expo-location';
+import { pickPhoto } from '../services/api';
 
 export default function CreatePostsScreen() {
-    const [photo, setPhoto] = useState(null);
+    const [img, setImg] = useState(null);
     const [title, setTitle] = useState(null);
     const [location, setLocation] = useState(null);
     const [coords, setCoords] = useState(null);
@@ -37,8 +40,10 @@ export default function CreatePostsScreen() {
     const [type, setType] = useState(Camera.Constants.Type.back);
 
     const navigation = useNavigation();
+    const dispatch = useDispatch();
+    const { uId } = useSelector(selectUserData);
 
-    const isActive = !!photo && !!title;
+    const isActive = !!img && !!title;
 
     useEffect(() => {
         (async () => {
@@ -61,10 +66,9 @@ export default function CreatePostsScreen() {
 
     async function getLocation() {
         await Location.getCurrentPositionAsync({
-            accuracy: Location.Accuracy.Low,
+            accuracy: Location.Accuracy.Balanced,
         })
             .then(position => {
-                // console.log('position :>> ', position);
                 setCoords([position.coords.latitude, position.coords.longitude]);
 
                 (async () => {
@@ -73,12 +77,11 @@ export default function CreatePostsScreen() {
                         longitude: position.coords.longitude,
                     });
                     if (!!address.length) {
-                        // console.log('address :>> ', address);
                         setLocation(`${address[0].city}, ${address[0].country}`);
                     }
                 })();
             })
-            .catch(error =>
+            .catch(() =>
                 Toast.error(
                     'Запит про місцезнаходження не виконано через невідповідні налаштування пристрою'
                 )
@@ -91,7 +94,7 @@ export default function CreatePostsScreen() {
         }
 
         if (isActive && location) {
-            console.log(`${photo}, ${title}, ${location}`);
+            dispatch(addPostThunk({ uId, img, title, location, coords }));
 
             onDelete();
             navigation.navigate('PostsScreen');
@@ -101,28 +104,24 @@ export default function CreatePostsScreen() {
     }
 
     function onDelete() {
-        setPhoto(null);
+        setImg(null);
         setTitle(null);
         setLocation(null);
+        setCoords(null);
     }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.container}>
-                <ToastManager
-                    width={Dimensions.get('window').width - 32}
-                    height={100}
-                    position="top"
-                />
                 <ScrollView>
                     <View style={styles.wrapperCamera}>
-                        {!!photo ? (
+                        {!!img ? (
                             <View>
-                                <Image style={styles.camera} source={{ uri: photo }} />
+                                <Image style={styles.camera} source={{ uri: img }} />
 
                                 <Pressable
                                     style={styles.cameraContainer}
-                                    onPress={() => setPhoto(null)}
+                                    onPress={() => setImg(null)}
                                 >
                                     <SvgDelPost />
                                 </Pressable>
@@ -150,7 +149,7 @@ export default function CreatePostsScreen() {
                                         if (cameraRef) {
                                             const { uri } = await cameraRef.takePictureAsync();
                                             await MediaLibrary.createAssetAsync(uri);
-                                            setPhoto(uri);
+                                            setImg(uri);
                                         }
                                     }}
                                 >
@@ -158,10 +157,15 @@ export default function CreatePostsScreen() {
                                 </Pressable>
                             </Camera>
                         )}
-
-                        <Text style={styles.text}>
-                            {!photo ? 'Завантажте фото' : 'Редагувати фото'}
-                        </Text>
+                        <Pressable
+                            onPress={async () => {
+                                setImg(await pickPhoto([4, 3]));
+                            }}
+                        >
+                            <Text style={styles.text}>
+                                {!img ? 'Завантажте фото' : 'Редагувати фото'}
+                            </Text>
+                        </Pressable>
                     </View>
 
                     <KeyboardAvoidingView

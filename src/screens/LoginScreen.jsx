@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigation } from '@react-navigation/native';
 import {
     StyleSheet,
@@ -12,6 +13,7 @@ import {
 } from 'react-native';
 import CustomInput from '../components/CustomInput';
 import CustomBtn from '../components/CustomBtn/';
+import { loginUserThunk } from '../redux/auth/userThunks';
 
 export default function LoginScreen() {
     const [email, setEmail] = useState('');
@@ -21,11 +23,11 @@ export default function LoginScreen() {
     const [isPasswordHide, setPasswordHide] = useState(true);
 
     const navigation = useNavigation();
+    const dispatch = useDispatch();
 
     function onLogin() {
         if (!!email && !!password) {
-            console.log(`email: ${email}, password: ${password}`);
-            navigation.navigate('HomeScreen');
+            dispatch(loginUserThunk({ email, password }));
         }
     }
 
