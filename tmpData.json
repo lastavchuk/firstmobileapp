@@ -3,33 +3,38 @@
         id: 1,
         img: "../assets/images/tmp-post.jpg",
         title: "Ліс",
-        comment: 0,
         like: 0,
-        position: {location: "Ivano-Frankivsk, Ukraine", coords: [48.9117437,24.6347286]}
+        position: {location: "Ivano-Frankivsk, Ukraine", coords: [48.9117437,24.6347286]},
+        comments: []
         
     },
     {
         id: 2,
         img: "../assets/images/tmp-post.jpg",
         title: "Ліс",
-        comment: 0,
         like: 5,
-        position: {location: "Khmelnytsky, Ukraine", coords: [49.4105227,26.9128581]}
+        position: {location: "Khmelnytsky, Ukraine", coords: [49.4105227,26.9128581]},
+        comments: []
     },
     {
         id: 3,
         img: "../assets/images/tmp-post.jpg",
         title: "Ліс",
-        comment: 3,
         like: 7,
-        position: {location: "Chernivtsy, Ukraine", coords: [48.3213186,25.851518]}
+        position: {location: "Chernivtsy, Ukraine", coords: [48.3213186,25.851518]},
+        comments: [{userId: 123, date: "09 червня, 2020 | 08:40", text: "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!"},
+                   {userId: 111, date: "09 червня, 2020 | 09:14", text: "A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images."},
+                   {userId: 123, date: "09 червня, 2020 | 09:20", text: "Thank you! That was very helpful!"}
+                ]
     },
     {
         id: 4,
         img: "../assets/images/tmp-post.jpg",
         title: "Ліс",
-        comment: 2,
         like: 3,
-        position: {location: "Lviv, Ukraine", coords: [49.8326598,23.9298352]}
+        position: {location: "Lviv, Ukraine", coords: [49.8326598,23.9298352]},
+        comments: [{userId: 123, date: "09 червня, 2020 | 08:40", text: "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!"},
+                   {userId: 111, date: "09 червня, 2020 | 09:14", text: "A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images."},
+                ]
     },
 ];
