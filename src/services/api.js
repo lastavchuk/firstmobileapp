@@ -171,7 +171,6 @@ export const addLikeToPost = async postId => {
         return { id: postId, like: addCountLike };
     } catch (error) {
         Toast.info('Сталася помилка при додаванні лайку! Спробуйте пізніше');
-        console.log('error :>> ', error);
         throw error;
     }
 };
