@@ -5,7 +5,16 @@ import {
     signOut,
 } from 'firebase/auth';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { collection, addDoc, getDocs, getDoc, doc, query, where } from 'firebase/firestore';
+import {
+    collection,
+    doc,
+    addDoc,
+    getDoc,
+    getDocs,
+    updateDoc,
+    query,
+    where,
+} from 'firebase/firestore';
 
 import * as ImagePicker from 'expo-image-picker';
 import { Toast } from 'toastify-react-native';
@@ -145,6 +154,24 @@ export const writePostToFirestore = async ({
         } else throw 'Error to upload a file!';
     } catch (error) {
         Toast.info('Сталася помилка при додаванні посту! Спробуйте пізніше');
+        throw error;
+    }
+};
+
+export const addLikeToPost = async postId => {
+    try {
+        const postRef = doc(db, 'posts', postId);
+
+        const post = await getDoc(postRef);
+        const addCountLike = post.data().like + 1;
+
+        await updateDoc(postRef, {
+            like: addCountLike,
+        });
+        return { id: postId, like: addCountLike };
+    } catch (error) {
+        Toast.info('Сталася помилка при додаванні лайку! Спробуйте пізніше');
+        console.log('error :>> ', error);
         throw error;
     }
 };

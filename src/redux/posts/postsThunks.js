@@ -1,5 +1,9 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { writePostToFirestore, getAllPostsUserFromFirestore } from '../../services/api';
+import {
+    writePostToFirestore,
+    addLikeToPost,
+    getAllPostsUserFromFirestore,
+} from '../../services/api';
 
 export const getAllPostsThunk = createAsyncThunk(
     'posts/getAllPostsThunk',
@@ -20,9 +24,9 @@ export const addPostThunk = createAsyncThunk('posts/addPostThunk', async (post, 
     }
 });
 
-export const addLikeThunk = createAsyncThunk('posts/addLikeThunk', async (post, thunkAPI) => {
+export const addLikeThunk = createAsyncThunk('posts/addLikeThunk', async (postId, thunkAPI) => {
     try {
-        return await writePostToFirestore(post);
+        return await addLikeToPost(postId);
     } catch (error) {
         return thunkAPI.rejectWithValue(error.response.data);
     }

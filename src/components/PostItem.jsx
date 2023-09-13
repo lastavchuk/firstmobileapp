@@ -1,8 +1,11 @@
 import { StyleSheet, View, Text, Image, Pressable } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from 'react-redux';
+
 import SvgComment from '../assets/images/comment.svg';
 import SvgLike from '../assets/images/like.svg';
 import SvgMap from '../assets/images/map.svg';
+import { addLikeThunk } from '../redux/posts/postsThunks';
 
 function getColor(count) {
     return !count ? '#bdbdbd' : '#ff6c00';
@@ -16,7 +19,10 @@ function getFill(count) {
 }
 
 export default function PostItem({ data }) {
+    const dispatch = useDispatch();
+
     const {
+        id,
         img,
         title,
         position: { location, coords },
@@ -47,14 +53,15 @@ export default function PostItem({ data }) {
                             {comments.length}
                         </Text>
                     </Pressable>
-
-                    <SvgLike
-                        fill="#ffffff"
-                        style={{
-                            color: getColor(like),
-                            marginLeft: 16,
-                        }}
-                    />
+                    <Pressable onPress={() => dispatch(addLikeThunk(id))}>
+                        <SvgLike
+                            fill="#ffffff"
+                            style={{
+                                color: getColor(like),
+                                marginLeft: 16,
+                            }}
+                        />
+                    </Pressable>
                     <Text style={[styles.postText, { color: getColorSoc(like) }]}>{like}</Text>
                 </View>
 
